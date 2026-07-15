@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>ログイン | 日報管理</title>
+<link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+<div class="page">
+  <div class="auth-card">
+    <h1>日報管理システム</h1>
+
+    <!-- 1段階目：メールアドレス入力 -->
+    <form id="email-form">
+      <div class="field">
+        <label for="email">メールアドレス</label>
+        <input type="email" id="email" required autocomplete="username" />
+      </div>
+      <button type="submit" class="btn btn-primary" id="email-next-btn">次へ</button>
+      <div class="error-text" id="email-error"></div>
+    </form>
+
+    <!-- 2段階目：パスワード入力（登録済みユーザーのみ表示） -->
+    <form id="password-form" hidden>
+      <div class="field">
+        <label>メールアドレス</label>
+        <input type="text" id="email-display" disabled />
+      </div>
+      <div class="field">
+        <label for="password">パスワード</label>
+        <input type="password" id="password" required autocomplete="current-password" />
+      </div>
+      <button type="submit" class="btn btn-primary" id="login-btn">ログイン</button>
+      <div class="error-text" id="password-error"></div>
+    </form>
+  </div>
+</div>
+
+<script type="module">
+  import { auth, fetchUserStatus, login, pageForRole } from "./js/auth.js";
+  import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-auth.js";
+
+  const emailForm = document.getElementById("email-form");
+  const emailInput = document.getElementById("email");
+  const emailError = document.getElementById("email-error");
+
+  const passwordForm = document.getElementById("password-form");
+  const emailDisplay = document.getElementById("email-display");
+  const passwordInput = document.getElementById("password");
+  const passwordError = document.getElementById("password-error");
+
+  let currentEmail = "";
+
+  // 既にログイン済みならそれぞれの画面へ
+  onAuthStateChanged(auth, async (user) => {
+    if (user && user.email) {
+      const status = await fetchUserStatus(user.email);
+      if (status) location.href = pageForRole(status.role);
+    }
+  });
+
+  emailForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    emailError.textContent = "";
+    const email = emailInput.value.trim();
+
+    let status;
+    try {
+      status = await fetchUserStatus(email);
+    } catch (err) {
+      emailError.textContent = "確認中にエラーが発生しました。時間をおいて再度お試しください。";
+      return;
+    }
+
+    if (!status) {
+      emailError.textContent = "登録されていないメールアドレスです。管理者にお問い合わせください。";
+      return;
+    }
+
+    if (!status.passwordSet) {
+      location.href = "set-password.html?email=" + encodeURIComponent(email);
+      return;
+    }
+
+    // パスワード入力欄へ切り替え
+    currentEmail = email;
+    emailDisplay.value = email;
+    emailForm.hidden = true;
+    passwordForm.hidden = false;
+    passwordInput.focus();
+  });
+
+  passwordForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    passwordError.textContent = "";
+
+    try {
+      await login(currentEmail, passwordInput.value);
+      const status = await fetchUserStatus(currentEmail);
+      location.href = pageForRole(status.role);
+    } catch (err) {
+      passwordError.textContent = "メールアドレスまたはパスワードが正しくありません。";
+    }
+  });
+</script>
+</body>
+</html>

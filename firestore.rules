@@ -1,0 +1,55 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isAdmin() {
+      return request.auth != null &&
+        get(/databases/$(database)/documents/users/$(request.auth.token.email)).data.role == 'admin';
+    }
+
+    // ユーザー登録リスト（メールアドレスがドキュメントID）
+    match /users/{email} {
+      // ログイン画面で「登録済みか／パスワード設定済みか」を未認証のまま確認する必要があるため
+      // 単一ドキュメントの取得（get）のみ誰でも許可する（メールアドレスを知らないと参照できない）。
+      // 一覧取得（list）は、管理者がメンバー一覧を表示するために管理者のみ許可する。
+      allow get: if true;
+      allow list: if isAdmin();
+
+      // 新規ユーザー登録は管理者のみ
+      allow create: if isAdmin();
+
+      // 本人が初回パスワード設定を完了した際、passwordSet を false→true にする更新のみ許可
+      allow update: if request.auth != null
+        && request.auth.token.email == email
+        && resource.data.passwordSet == false
+        && request.resource.data.passwordSet == true
+        && request.resource.data.role == resource.data.role;
+
+      allow delete: if false;
+    }
+
+    // 進捗エントリ
+    match /entries/{entryId} {
+      // 本人のみ、自分のメールアドレスで作成可能。
+      // かつ、そのメールアドレスが users コレクションに登録済みであることも必須
+      // （Authenticationはメールアドレスを制限せず誰でもアカウント作成できてしまうため、
+      //   未登録者による無意味なエントリ作成を防ぐ）
+      allow create: if request.auth != null
+        && request.resource.data.email == request.auth.token.email
+        && exists(/databases/$(database)/documents/users/$(request.auth.token.email));
+
+      // 閲覧は本人 or 管理者のみ
+      allow read: if request.auth != null
+        && (resource.data.email == request.auth.token.email || isAdmin());
+
+      // 更新は「本人が自分のエントリを編集」または「管理者が reply フィールドのみ更新」
+      allow update: if request.auth != null && (
+        (resource.data.email == request.auth.token.email
+          && request.resource.data.email == resource.data.email)
+        || (isAdmin() && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['reply']))
+      );
+
+      allow delete: if false;
+    }
+  }
+}

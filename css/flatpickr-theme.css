@@ -1,0 +1,78 @@
+/* Flatpickr（日付選択カレンダー）をアプリのオレンジテーマに合わせるための上書き */
+
+.flatpickr-calendar {
+  background: var(--surface-1);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.18);
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+.flatpickr-calendar.arrowTop::before,
+.flatpickr-calendar.arrowTop::after {
+  display: none;
+}
+
+.flatpickr-months {
+  background: linear-gradient(135deg, var(--accent) 0%, var(--accent-strong) 100%);
+  border-radius: 10px 10px 0 0;
+  padding: 6px 0;
+}
+
+.flatpickr-months .flatpickr-month {
+  color: #ffffff;
+  fill: #ffffff;
+}
+
+.flatpickr-months .flatpickr-prev-month,
+.flatpickr-months .flatpickr-next-month {
+  color: #ffffff;
+  fill: #ffffff;
+}
+
+.flatpickr-months .flatpickr-prev-month:hover svg,
+.flatpickr-months .flatpickr-next-month:hover svg {
+  fill: rgba(255, 255, 255, 0.7);
+}
+
+.flatpickr-current-month .flatpickr-monthDropdown-months,
+.flatpickr-current-month input.cur-year {
+  color: #ffffff;
+}
+
+.flatpickr-weekdays {
+  background: var(--accent-soft);
+}
+
+span.flatpickr-weekday {
+  background: var(--accent-soft);
+  color: var(--accent-strong);
+  font-weight: 600;
+}
+
+.flatpickr-day {
+  color: var(--text-primary);
+  border-radius: 6px;
+}
+
+.flatpickr-day.today {
+  border-color: var(--accent);
+}
+
+.flatpickr-day:hover {
+  background: var(--accent-soft);
+  border-color: var(--accent-soft-border);
+}
+
+.flatpickr-day.selected,
+.flatpickr-day.selected:hover {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #ffffff;
+}
+
+.flatpickr-day.flatpickr-disabled,
+.flatpickr-day.prevMonthDay,
+.flatpickr-day.nextMonthDay {
+  color: var(--text-muted);
+}

@@ -1,0 +1,550 @@
+:root {
+  --surface-1: #fcfcfb;
+  --page-plane: #f9f9f7;
+  --text-primary: #0b0b0b;
+  --text-secondary: #52514e;
+  --text-muted: #898781;
+  --gridline: #e1e0d9;
+  --baseline: #c3c2b7;
+  --border: rgba(11, 11, 11, 0.10);
+  --success: #006300;
+  --danger: #d03b3b;
+
+  --accent: #eb6834;
+  --accent-strong: #c94d1f;
+  --accent-soft: #fbe6d8;
+  --accent-soft-border: #e8b795;
+  --btn-bg: #5c3821;
+  --btn-bg-hover: #714628;
+  --btn-text: #ffffff;
+
+  --member-accent: #16a6ad;
+  --leave-color: #6b6f76;
+
+  --series-1: #2a78d6;
+  --series-2: #1baf7a;
+  --series-3: #eda100;
+  --series-4: #008300;
+  --series-5: #4a3aa7;
+  --series-6: #e34948;
+  --series-7: #e87ba4;
+  --series-8: #eb6834;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --surface-1: #1a1a19;
+    --page-plane: #0d0d0d;
+    --text-primary: #ffffff;
+    --text-secondary: #c3c2b7;
+    --text-muted: #898781;
+    --gridline: #2c2c2a;
+    --baseline: #383835;
+    --border: rgba(255, 255, 255, 0.10);
+    --success: #0ca30c;
+    --danger: #e66767;
+
+    --accent: #d95926;
+    --accent-strong: #eb6834;
+    --accent-soft: rgba(217, 89, 38, 0.14);
+    --accent-soft-border: rgba(217, 89, 38, 0.4);
+    --btn-bg: #c98a54;
+    --btn-bg-hover: #d9a06e;
+    --btn-text: #2b1a10;
+
+    --member-accent: #16a6ad;
+    --leave-color: #9a9ea6;
+
+    --series-1: #3987e5;
+    --series-2: #199e70;
+    --series-3: #c98500;
+    --series-4: #008300;
+    --series-5: #9085e9;
+    --series-6: #e66767;
+    --series-7: #d55181;
+    --series-8: #d95926;
+  }
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  background: var(--page-plane);
+  color: var(--text-primary);
+}
+
+a { color: var(--accent); }
+
+/* ---------- ログイン／パスワード設定などの中央カード ---------- */
+.page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  background: radial-gradient(circle at 50% -10%, var(--accent-soft) 0%, var(--page-plane) 60%);
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 380px;
+  background: var(--surface-1);
+  border: 1px solid var(--border);
+  border-top: 4px solid var(--accent);
+  border-radius: 12px;
+  padding: 32px;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.08);
+}
+
+.auth-card h1 {
+  font-size: 1.25rem;
+  margin: 0 0 24px;
+  text-align: center;
+  color: var(--accent-strong);
+}
+
+/* ---------- フォーム共通部品 ---------- */
+.field { margin-bottom: 16px; }
+
+.field-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.field label {
+  display: block;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  margin-bottom: 6px;
+}
+
+.field .hint {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+
+.required-mark {
+  color: var(--danger);
+  margin-left: 4px;
+  font-size: 1.3em;
+  font-weight: 700;
+  vertical-align: middle;
+}
+
+input[type="email"],
+input[type="password"],
+input[type="text"],
+select,
+textarea {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--accent-soft-border);
+  border-radius: 8px;
+  background: var(--accent-soft);
+  color: var(--text-primary);
+  font-size: 0.95rem;
+  font-family: inherit;
+}
+
+textarea {
+  resize: vertical;
+  min-height: 120px;
+  white-space: pre-wrap;
+}
+
+input:disabled,
+select:disabled,
+textarea:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+#entry-date {
+  width: auto;
+  min-width: 160px;
+}
+
+#entry-leave {
+  width: auto;
+  min-width: 120px;
+}
+
+#entry-progress {
+  width: auto;
+  min-width: 100px;
+}
+
+input:focus, select:focus, textarea:focus {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
+.btn {
+  display: inline-block;
+  padding: 10px 18px;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  font-size: 0.95rem;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.btn-primary {
+  background: var(--btn-bg);
+  color: var(--btn-text);
+  width: 100%;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.btn-primary:hover {
+  background: var(--btn-bg-hover);
+}
+
+.btn-secondary {
+  background: transparent;
+  color: var(--text-primary);
+  border-color: var(--baseline);
+}
+
+.btn-block { width: 100%; }
+
+.error-text {
+  color: var(--danger);
+  font-size: 0.85rem;
+  margin-top: 8px;
+  min-height: 1.2em;
+}
+
+/* ---------- アプリ全体ヘッダー ---------- */
+.app-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 24px;
+  background: linear-gradient(135deg, var(--accent) 0%, var(--accent-strong) 100%);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.18);
+  color: #ffffff;
+}
+
+.app-header h1 {
+  font-size: 1.05rem;
+  margin: 0;
+  color: #ffffff;
+}
+
+.app-header .hint {
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.app-header .btn-secondary {
+  background: rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.55);
+}
+
+.app-header .btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.22);
+}
+
+.app-main {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 24px 16px 64px;
+}
+
+.card {
+  background: var(--surface-1);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 24px;
+}
+
+.card h2 {
+  font-size: 1rem;
+  margin: 0 0 16px;
+  padding-left: 12px;
+  border-left: 4px solid var(--accent);
+}
+
+/* ---------- カレンダー ---------- */
+.calendar-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.calendar-nav .month-label {
+  font-weight: 600;
+}
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 6px;
+}
+
+.calendar-grid .weekday {
+  text-align: center;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--accent-strong);
+  background: var(--accent-soft);
+  border-radius: 6px;
+  padding: 6px 0;
+  margin-bottom: 2px;
+}
+
+.calendar-grid .weekday-sun {
+  color: var(--danger);
+}
+
+.calendar-grid .weekday-sat {
+  color: var(--series-1);
+}
+
+.calendar-cell {
+  position: relative;
+  height: 92px;
+  border: 1px solid var(--gridline);
+  border-left: 4px solid var(--gridline);
+  border-radius: 8px;
+  padding: 6px;
+  cursor: default;
+  background: var(--page-plane);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  overflow: hidden;
+}
+
+.calendar-cell.has-reply::after {
+  content: "💬";
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  font-size: 1.3rem;
+  line-height: 1;
+}
+
+.calendar-cell.date-sun:not(.has-entry) {
+  background: color-mix(in srgb, var(--danger) 10%, var(--page-plane));
+}
+
+.calendar-cell.date-sat:not(.has-entry) {
+  background: color-mix(in srgb, var(--series-1) 10%, var(--page-plane));
+}
+
+.calendar-cell.empty {
+  border-color: transparent;
+  background: transparent;
+}
+
+.calendar-cell.has-entry {
+  cursor: pointer;
+  background: color-mix(in srgb, var(--cell-accent, var(--accent)) 16%, var(--surface-1));
+  border-color: var(--gridline);
+  border-left: 4px solid var(--cell-accent, var(--accent));
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+}
+
+.calendar-cell.has-entry:hover {
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
+}
+
+.calendar-cell.is-leave {
+  background: color-mix(in srgb, var(--leave-color) 20%, var(--surface-1));
+  border-left: 4px solid var(--leave-color);
+}
+
+.calendar-cell.is-leave:hover {
+  outline: 2px solid var(--leave-color);
+  outline-offset: -2px;
+}
+
+.leave-badge {
+  background: var(--leave-color) !important;
+}
+
+.half-leave-mark {
+  display: inline-flex;
+  align-self: flex-start;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #ffffff;
+  background: var(--leave-color);
+  padding: 2px 8px;
+  border-radius: 999px;
+}
+
+.calendar-cell .date-num {
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+}
+
+.calendar-cell.date-sun .date-num {
+  color: var(--danger);
+  font-weight: 700;
+}
+
+.calendar-cell.date-sat .date-num {
+  color: var(--series-1);
+  font-weight: 700;
+}
+
+.calendar-cell .tantou-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.72rem;
+  padding: 2px 6px;
+  border-radius: 999px;
+  color: #ffffff;
+  line-height: 1.5;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.calendar-cell .progress-text {
+  font-size: 0.72rem;
+  color: var(--text-secondary);
+}
+
+/* ---------- 詳細パネル（モーダル） ---------- */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 40px 16px;
+  overflow-y: auto;
+}
+
+.modal-overlay[hidden] { display: none; }
+
+.modal-panel {
+  width: 100%;
+  max-width: 560px;
+  background: var(--surface-1);
+  border-radius: 12px;
+  padding: 24px;
+  border: 1px solid var(--border);
+}
+
+.modal-panel .modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.detail-nav {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.detail-nav .btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.detail-row {
+  margin-bottom: 14px;
+}
+
+.detail-row .detail-label {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  margin-bottom: 4px;
+}
+
+.detail-row .detail-value {
+  white-space: pre-wrap;
+  font-size: 0.92rem;
+}
+
+.reply-block {
+  border-top: 1px solid var(--gridline);
+  margin-top: 16px;
+  padding-top: 16px;
+}
+
+.reply-block .reply-existing {
+  background: var(--page-plane);
+  border-radius: 8px;
+  padding: 12px;
+  margin-bottom: 12px;
+  white-space: pre-wrap;
+  font-size: 0.9rem;
+}
+
+/* ---------- メンバー切り替え（管理者用） ---------- */
+.member-button-row {
+  margin-bottom: 20px;
+}
+
+.member-label {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 10px;
+  padding-left: 12px;
+  border-left: 4px solid var(--accent);
+}
+
+.member-button-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.member-button {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 3px;
+  min-width: 150px;
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--surface-1);
+  cursor: pointer;
+  font-family: inherit;
+  text-align: left;
+}
+
+.member-button:hover {
+  outline: 2px solid var(--member-accent);
+  outline-offset: -2px;
+}
+
+.member-button .member-name {
+  font-weight: 600;
+  color: var(--text-primary);
+  font-size: 0.92rem;
+}
+
+.member-button .member-meta {
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+}
+
+.member-button.selected {
+  background: var(--member-accent);
+  border-color: var(--member-accent);
+}
+
+.member-button.selected .member-name,
+.member-button.selected .member-meta {
+  color: #ffffff;
+}

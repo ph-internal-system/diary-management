@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>管理者ダッシュボード | 日報管理</title>
+<link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+<header class="app-header">
+  <h1>日報管理システム（管理者）</h1>
+  <div>
+    <span id="user-email" class="hint"></span>
+    <button type="button" class="btn btn-secondary" id="logout-btn" style="margin-left:12px;">ログアウト</button>
+  </div>
+</header>
+
+<main class="app-main">
+
+  <section class="card">
+    <div class="member-button-row">
+      <div class="member-label">メンバー</div>
+      <div id="member-buttons" class="member-button-list"></div>
+    </div>
+  </section>
+
+  <section class="card">
+    <div class="calendar-nav">
+      <button type="button" class="btn btn-secondary" id="prev-month">← 前月</button>
+      <span class="month-label" id="month-label"></span>
+      <button type="button" class="btn btn-secondary" id="next-month">次月 →</button>
+    </div>
+    <div id="calendar"></div>
+  </section>
+
+</main>
+
+<!-- 詳細＋リプライモーダル -->
+<div class="modal-overlay" id="detail-modal" hidden>
+  <div class="modal-panel">
+    <div class="modal-header">
+      <h2 id="detail-date"></h2>
+      <button type="button" class="btn btn-secondary" id="detail-close">閉じる</button>
+    </div>
+
+    <div class="detail-nav">
+      <button type="button" class="btn btn-secondary" id="detail-prev-day">← 前の日</button>
+      <button type="button" class="btn btn-secondary" id="detail-next-day">次の日 →</button>
+    </div>
+
+    <div class="detail-row" id="detail-leave-row" hidden>
+      <div class="detail-label">休暇区分</div>
+      <div class="detail-value" id="detail-leave"></div>
+    </div>
+    <div class="detail-row">
+      <div class="detail-label">担当</div>
+      <div class="detail-value" id="detail-tantou"></div>
+    </div>
+    <div class="detail-row">
+      <div class="detail-label">進捗率</div>
+      <div class="detail-value" id="detail-progress"></div>
+    </div>
+    <div class="detail-row">
+      <div class="detail-label">作業状況および課題など</div>
+      <div class="detail-value" id="detail-status"></div>
+    </div>
+    <div class="detail-row">
+      <div class="detail-label">今日新しく学んだこと</div>
+      <div class="detail-value" id="detail-learned"></div>
+    </div>
+    <div class="detail-row">
+      <div class="detail-label">明日の作業</div>
+      <div class="detail-value" id="detail-tomorrow"></div>
+    </div>
+    <div class="detail-row">
+      <div class="detail-label">その他</div>
+      <div class="detail-value" id="detail-other"></div>
+    </div>
+
+    <div class="reply-block">
+      <div class="detail-label">管理者からのリプライ</div>
+
+      <form id="reply-form">
+        <div class="field">
+          <label for="reply-author">お名前<span class="required-mark">*</span></label>
+          <input type="text" id="reply-author" required />
+        </div>
+        <div class="field">
+          <textarea id="reply-input" placeholder="リプライを入力してください"></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">リプライを送信</button>
+        <div class="error-text" id="reply-error"></div>
+        <div class="hint" id="reply-message"></div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/gh/osamutake/japanese-holidays-js@v1.0.10/lib/japanese-holidays.min.js"></script>
+<script type="module" src="js/admin.js"></script>
+</body>
+</html>

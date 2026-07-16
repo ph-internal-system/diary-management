@@ -38,9 +38,11 @@ service cloud.firestore {
         && request.resource.data.email == request.auth.token.email
         && exists(/databases/$(database)/documents/users/$(request.auth.token.email));
 
-      // 閲覧は本人 or 管理者のみ
+      // 閲覧は本人 or 管理者のみ。
+      // ドキュメントが存在しない場合（resource == null）は、まだ日報を書いていない日付を
+      // 確認しているだけなので許可する（存在確認のみで中身は漏れない）。
       allow read: if request.auth != null
-        && (resource.data.email == request.auth.token.email || isAdmin());
+        && (resource == null || resource.data.email == request.auth.token.email || isAdmin());
 
       // 更新は「本人が自分のエントリを編集」または「管理者が reply フィールドのみ更新」
       allow update: if request.auth != null && (
@@ -49,7 +51,9 @@ service cloud.firestore {
         || (isAdmin() && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['reply', 'replyRead']))
       );
 
-      allow delete: if false;
+      // 削除は本人が自分のエントリのみ可能
+      allow delete: if request.auth != null
+        && resource.data.email == request.auth.token.email;
     }
 
     // 管理者から全メンバーへのお知らせ

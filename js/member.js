@@ -4,6 +4,7 @@ import {
   getDoc,
   setDoc,
   updateDoc,
+  deleteDoc,
   collection,
   query,
   where,
@@ -37,6 +38,9 @@ const modalOverlay = document.getElementById("detail-modal");
 const modalClose = document.getElementById("detail-close");
 const detailPrevDayBtn = document.getElementById("detail-prev-day");
 const detailNextDayBtn = document.getElementById("detail-next-day");
+const detailDeleteBtn = document.getElementById("detail-delete");
+
+let currentDetailDate = "";
 
 const noticeList = document.getElementById("notice-list");
 const noticeEmpty = document.getElementById("notice-empty");
@@ -276,6 +280,7 @@ async function goToNotice(dateStr) {
 }
 
 function openDetail(dateStr, entry) {
+  currentDetailDate = dateStr;
   document.getElementById("detail-date").textContent = dateStr;
 
   const leaveRow = document.getElementById("detail-leave-row");
@@ -334,4 +339,24 @@ detailNextDayBtn.addEventListener("click", () => {
 modalClose.addEventListener("click", () => { modalOverlay.hidden = true; });
 modalOverlay.addEventListener("click", (e) => {
   if (e.target === modalOverlay) modalOverlay.hidden = true;
+});
+
+detailDeleteBtn.addEventListener("click", async () => {
+  if (!currentDetailDate) return;
+  const ok = confirm(`${currentDetailDate}の進捗を削除します。よろしいですか？`);
+  if (!ok) return;
+
+  try {
+    await deleteDoc(doc(db, "entries", `${email}_${currentDetailDate}`));
+    modalOverlay.hidden = true;
+
+    if (dateInput.value === currentDetailDate) {
+      await loadEntryIntoForm();
+    }
+
+    await loadCalendar();
+    await loadNotices();
+  } catch (err) {
+    alert("削除に失敗しました。時間をおいて再度お試しください。");
+  }
 });

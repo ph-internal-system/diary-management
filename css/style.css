@@ -210,6 +210,24 @@ input:focus, select:focus, textarea:focus {
   border-color: var(--baseline);
 }
 
+.btn-danger {
+  background: transparent;
+  color: var(--danger);
+  border-color: var(--danger);
+}
+
+.btn-danger:hover {
+  background: var(--danger);
+  color: #ffffff;
+}
+
+.detail-delete-row {
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid var(--gridline);
+  text-align: right;
+}
+
 .btn-block { width: 100%; }
 
 .error-text {

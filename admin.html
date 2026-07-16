@@ -33,6 +33,21 @@
     <div id="calendar"></div>
   </section>
 
+  <section class="card">
+    <h2>お知らせ管理</h2>
+    <form id="announcement-form">
+      <div class="field">
+        <textarea id="announcement-input" placeholder="メンバー全員へのお知らせを入力してください" required></textarea>
+      </div>
+      <button type="submit" class="btn btn-primary">お知らせを送信</button>
+      <div class="error-text" id="announcement-error"></div>
+      <div class="hint" id="announcement-message"></div>
+    </form>
+
+    <ul id="announcement-list" class="announcement-manage-list"></ul>
+    <p class="hint" id="announcement-manage-empty">お知らせはまだありません。</p>
+  </section>
+
 </main>
 
 <!-- 詳細＋リプライモーダル -->
@@ -78,7 +93,7 @@
     </div>
 
     <div class="reply-block">
-      <div class="detail-label">管理者からのリプライ</div>
+      <div class="detail-label">管理者からのリプライ　<span id="detail-reply-status"></span></div>
 
       <form id="reply-form">
         <div class="field">

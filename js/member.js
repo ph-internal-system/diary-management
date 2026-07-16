@@ -3,10 +3,12 @@ import {
   doc,
   getDoc,
   setDoc,
+  updateDoc,
   collection,
   query,
   where,
   orderBy,
+  limit,
   getDocs,
 } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js";
 import { renderCalendar, monthRangeStrings, pad2, leaveLabel, isLeaveType } from "./calendar.js";
@@ -35,6 +37,11 @@ const modalOverlay = document.getElementById("detail-modal");
 const modalClose = document.getElementById("detail-close");
 const detailPrevDayBtn = document.getElementById("detail-prev-day");
 const detailNextDayBtn = document.getElementById("detail-next-day");
+
+const noticeList = document.getElementById("notice-list");
+const noticeEmpty = document.getElementById("notice-empty");
+const announcementList = document.getElementById("announcement-list");
+const announcementEmpty = document.getElementById("announcement-empty");
 
 let entriesByDateMap = {};
 let sortedEntryDates = [];
@@ -65,6 +72,8 @@ leaveInput.addEventListener("change", applyLeaveMode);
   await loadEntryIntoForm();
 
   await loadCalendar();
+  await loadNotices();
+  await loadAnnouncements();
 })();
 
 document.getElementById("logout-btn").addEventListener("click", async () => {
@@ -169,6 +178,103 @@ async function loadCalendar() {
   renderCalendar(calendarContainer, viewYear, viewMonth, entriesByDate, openDetail);
 }
 
+// "YYYY-MM-DD" -> "M月D日"
+function formatMonthDay(dateStr) {
+  const [, m, d] = dateStr.split("-").map(Number);
+  return `${m}月${d}日`;
+}
+
+async function loadNotices() {
+  const q = query(
+    collection(db, "entries"),
+    where("email", "==", email),
+    where("replyRead", "==", false),
+    orderBy("date", "desc"),
+    limit(10)
+  );
+  const snap = await getDocs(q);
+
+  noticeList.innerHTML = "";
+  noticeEmpty.hidden = snap.size > 0;
+
+  snap.forEach((d) => {
+    const data = d.data();
+    const li = document.createElement("li");
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "notice-item";
+
+    const icon = document.createElement("span");
+    icon.className = "notice-icon";
+    icon.textContent = "💬";
+    btn.appendChild(icon);
+
+    const textWrap = document.createElement("span");
+    textWrap.className = "notice-text";
+
+    const dateEl = document.createElement("span");
+    dateEl.className = "notice-date";
+    dateEl.textContent = formatMonthDay(data.date);
+    textWrap.appendChild(dateEl);
+
+    const descEl = document.createElement("span");
+    descEl.className = "notice-desc";
+    descEl.textContent = "の日報にリプライがあります";
+    textWrap.appendChild(descEl);
+
+    btn.appendChild(textWrap);
+    btn.addEventListener("click", () => goToNotice(data.date));
+    li.appendChild(btn);
+    noticeList.appendChild(li);
+  });
+}
+
+async function loadAnnouncements() {
+  const q = query(collection(db, "announcements"), orderBy("createdAt", "desc"));
+  const snap = await getDocs(q);
+
+  announcementList.innerHTML = "";
+  announcementEmpty.hidden = snap.size > 0;
+
+  snap.forEach((d) => {
+    const data = d.data();
+    const li = document.createElement("li");
+    const item = document.createElement("div");
+    item.className = "notice-item announcement-item";
+
+    const icon = document.createElement("span");
+    icon.className = "notice-icon";
+    icon.textContent = "📢";
+    item.appendChild(icon);
+
+    const textWrap = document.createElement("span");
+    textWrap.className = "notice-text";
+
+    const bodyEl = document.createElement("span");
+    bodyEl.className = "notice-date";
+    bodyEl.textContent = data.text;
+    textWrap.appendChild(bodyEl);
+
+    const descEl = document.createElement("span");
+    descEl.className = "notice-desc";
+    descEl.textContent = `投稿者：${data.author || "不明"}`;
+    textWrap.appendChild(descEl);
+
+    item.appendChild(textWrap);
+    li.appendChild(item);
+    announcementList.appendChild(li);
+  });
+}
+
+async function goToNotice(dateStr) {
+  const [y, m] = dateStr.split("-").map(Number);
+  viewYear = y;
+  viewMonth = m;
+  await loadCalendar();
+  const entry = entriesByDateMap[dateStr];
+  if (entry) openDetail(dateStr, entry);
+}
+
 function openDetail(dateStr, entry) {
   document.getElementById("detail-date").textContent = dateStr;
 
@@ -193,6 +299,11 @@ function openDetail(dateStr, entry) {
     replySection.hidden = false;
     document.getElementById("detail-reply-author").textContent = `（回答者：${entry.reply.author || "不明"}）`;
     document.getElementById("detail-reply-text").textContent = entry.reply.text;
+
+    if (entry.replyRead === false) {
+      entry.replyRead = true; // ローカルの表示もすぐ既読扱いにする
+      updateDoc(doc(db, "entries", `${email}_${dateStr}`), { replyRead: true }).then(loadNotices);
+    }
   } else {
     replySection.hidden = true;
   }

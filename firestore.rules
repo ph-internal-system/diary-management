@@ -46,10 +46,18 @@ service cloud.firestore {
       allow update: if request.auth != null && (
         (resource.data.email == request.auth.token.email
           && request.resource.data.email == resource.data.email)
-        || (isAdmin() && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['reply']))
+        || (isAdmin() && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['reply', 'replyRead']))
       );
 
       allow delete: if false;
+    }
+
+    // 管理者から全メンバーへのお知らせ
+    match /announcements/{announcementId} {
+      allow read: if request.auth != null;
+      allow create: if isAdmin();
+      allow update: if false;
+      allow delete: if isAdmin();
     }
   }
 }

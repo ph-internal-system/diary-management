@@ -15,6 +15,15 @@
         { "fieldPath": "email", "order": "ASCENDING" },
         { "fieldPath": "date", "order": "DESCENDING" }
       ]
+    },
+    {
+      "collectionGroup": "entries",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "email", "order": "ASCENDING" },
+        { "fieldPath": "replyRead", "order": "ASCENDING" },
+        { "fieldPath": "date", "order": "DESCENDING" }
+      ]
     }
   ],
   "fieldOverrides": []

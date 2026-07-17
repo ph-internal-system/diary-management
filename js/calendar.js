@@ -9,6 +9,9 @@ const SERIES_COLORS = [
   "var(--series-5)",
   "var(--series-7)",
   "var(--series-8)",
+  "var(--series-9)",
+  "var(--series-10)",
+  "var(--series-11)",
 ];
 
 // 担当名から固定の色を決める（同じ担当は常に同じ色になる）

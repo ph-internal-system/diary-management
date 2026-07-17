@@ -5,6 +5,7 @@ import {
   setDoc,
   updateDoc,
   deleteDoc,
+  serverTimestamp,
   collection,
   query,
   where,
@@ -141,7 +142,7 @@ entryForm.addEventListener("submit", async (e) => {
 
   try {
     const ref = doc(db, "entries", `${email}_${date}`);
-    await setDoc(ref, { email, date, leaveType, tantou, progress, status, learned, tomorrow, other }, { merge: true });
+    await setDoc(ref, { email, date, leaveType, tantou, progress, status, learned, tomorrow, other, updatedAt: serverTimestamp() }, { merge: true });
     entrySaveMessage.textContent = "保存しました。";
     await loadCalendar();
   } catch (err) {

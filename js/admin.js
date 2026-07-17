@@ -91,7 +91,7 @@ async function loadMemberList() {
   }
 
   // 各メンバーの最新エントリを取得し、直近で日報を入力した順（新しい日付が先）に並べ替える。
-  // 入力が一件もないメンバーは末尾に回す。
+  // 日付が同じ場合は、保存時刻（updatedAt）が新しい順にする。入力が一件もないメンバーは末尾に回す。
   const membersWithLatest = await Promise.all(
     members.map(async (member) => ({ ...member, latest: await fetchLatestEntry(member.email) }))
   );
@@ -99,7 +99,13 @@ async function loadMemberList() {
     if (!a.latest && !b.latest) return 0;
     if (!a.latest) return 1;
     if (!b.latest) return -1;
-    return b.latest.date.localeCompare(a.latest.date);
+
+    const dateCompare = b.latest.date.localeCompare(a.latest.date);
+    if (dateCompare !== 0) return dateCompare;
+
+    const aTime = a.latest.updatedAt ? a.latest.updatedAt.toMillis() : 0;
+    const bTime = b.latest.updatedAt ? b.latest.updatedAt.toMillis() : 0;
+    return bTime - aTime;
   });
 
   for (const member of membersWithLatest) {
